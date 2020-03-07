@@ -8,9 +8,10 @@ builds:
   - main: .
     binary: gcs-uploader
     env:
-      - CGO_ENABLED=0
+      - CGO_ENABLED=1
     goos:
       - windows
+      - darwin
     goarch:
       - amd64
 release:
