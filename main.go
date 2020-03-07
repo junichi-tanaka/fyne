@@ -21,8 +21,12 @@ import (
 )
 
 var (
-	gcsURL    string
+	gcsURL      string
 	uploadFiles []string
+
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
 )
 
 func uploadFile(ctx context.Context, urlstr, file string) error {
@@ -59,6 +63,8 @@ func uploadFile(ctx context.Context, urlstr, file string) error {
 }
 
 func main() {
+	fmt.Printf("%v, commit %v, built at %v\n", version, commit, date)
+
 	ctx := context.Background()
 
 	app := app.New()
