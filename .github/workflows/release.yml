@@ -20,8 +20,8 @@ jobs:
         run: go get github.com/lucor/fyne-cross/cmd/fyne-cross
       - name: Build
         run: |
-          ${{ github.workspace }}/go/bin/fyne-cross --targets=windows/amd64 .
-          zip --junk-paths fyne_${{ github.ref }}_windows_amd64 ./fyne-cross/dist/windows-amd64/
+          fyne-cross --targets=windows/amd64 .
+          zip -j fyne-dist ./fyne-cross/dist/windows-amd64/
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -39,6 +39,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./fyne_${{ github.ref }}_windows_amd64.zip
+          asset_path: ./fyne-dist.zip
           asset_name: fyne_${{ github.ref }}_windows_amd64.zip
           asset_content_type: application/zip
