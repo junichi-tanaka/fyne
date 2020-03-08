@@ -20,7 +20,7 @@ jobs:
         run: go get github.com/lucor/fyne-cross/cmd/fyne-cross
       - name: Build
         run: |
-          fyne-cross --targets=windows/amd64 .
+          go/bin/fyne-cross --targets=windows/amd64 .
           zip -j fyne-dist ./fyne-cross/dist/windows-amd64/
       - name: Create Release
         id: create_release
