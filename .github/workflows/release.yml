@@ -20,7 +20,7 @@ jobs:
         run: go get github.com/lucor/fyne-cross/cmd/fyne-cross
       - name: Build
         run: |
-          $GOPATH/bin/fyne-cross --targets=windows/amd64 .
+          ${{ github.workspace }}/go/bin/fyne-cross --targets=windows/amd64 .
           zip --junk-paths fyne_${{ github.ref }}_windows_amd64 ./fyne-cross/dist/windows-amd64/
       - name: Create Release
         id: create_release
