@@ -3,7 +3,7 @@ name: goreleaser
 on:
   push:
     tags:
-    - "v[0-9]+.[0-9]+.[0-9]+"
+    - "v*"
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
@@ -15,11 +15,30 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v2-beta
         with:
-          go-version: 1.13
-      - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v1
-        with:
-          version: latest
-          args: release --rm-dist
+          go-version: 1.14
+      - name: Install fyne-cross
+        run: go get github.com/lucor/fyne-cross/cmd/fyne-cross
+      - name: Build
+        run: |
+          $GOPATH/bin/fyne-cross --targets=windows/amd64 .
+          zip --junk-paths fyne_${{ github.ref }}_windows_amd64 ./fyne-cross/dist/windows-amd64/
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./fyne_${{ github.ref }}_windows_amd64.zip
+          asset_name: fyne_${{ github.ref }}_windows_amd64.zip
+          asset_content_type: application/zip
